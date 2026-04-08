@@ -2,7 +2,7 @@
 Diff Loader using Git & Unidiff.
 """
 
-from typing import List, Optional
+from typing import Optional
 import unidiff
 import os
 from slopguard.utils.subprocess import run_git

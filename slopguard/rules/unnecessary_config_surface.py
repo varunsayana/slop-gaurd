@@ -13,7 +13,6 @@ class UnnecessaryConfigRule(BaseRule):
     ) -> List[Finding]:
         findings = []
         # Pragmatic check: looking for many default boolean flags in signatures visually
-        import re
 
         for i, line in enumerate(code.splitlines()):
             if "def " in line and line.count("=False") + line.count("=True") > 3:

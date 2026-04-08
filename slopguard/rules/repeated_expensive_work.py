@@ -14,11 +14,10 @@ class RepeatedExpensiveWorkRule(BaseRule):
     ) -> List[Finding]:
         findings = []
         inside_loop = False
-        loop_line = 0
         for i, line in enumerate(code.splitlines()):
             if re.match(r"^\s*(for|while)\s+", line):
                 inside_loop = True
-                loop_line = i + 1
+                i + 1
             elif inside_loop and re.search(
                 r"\s*(requests\.get|Query\.execute|db\.query)", line
             ):

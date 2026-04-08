@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 
 
 def is_ignored(path: str, exclude_patterns: list[str]) -> bool:

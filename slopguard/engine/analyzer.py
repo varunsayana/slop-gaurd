@@ -1,9 +1,8 @@
 import os
-from typing import List, Dict, Any
+from typing import Dict, Any
 from slopguard.config import SlopGuardConfig
-from slopguard.models import Finding, RunContext, Scope
+from slopguard.models import RunContext, Scope
 from slopguard.engine.diff_loader import DiffLoader
-from slopguard.engine.repo_baseline import RepoBaseline
 from slopguard.engine.scoring import ScoringEngine
 
 from slopguard.parsers.python_parser import PythonParser

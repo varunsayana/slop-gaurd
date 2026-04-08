@@ -6,7 +6,6 @@ import typer
 import sys
 from rich.console import Console
 from typing import Optional
-import json
 
 from slopguard.config import SlopGuardConfig
 from slopguard.models import RunContext

@@ -1,4 +1,3 @@
-import ast
 from typing import List, Any
 from slopguard.models import Finding, Severity, Confidence, Category
 from slopguard.rules.base import BaseRule

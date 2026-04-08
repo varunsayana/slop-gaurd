@@ -8,7 +8,7 @@ class MarkdownSummaryFormatter:
         status = results.get("status", "Pass")
         findings = results.get("findings", [])
         counts = results.get("counts", {})
-        categories = results.get("categories", {})
+        results.get("categories", {})
 
         md = [
             "## SlopGuard Report",

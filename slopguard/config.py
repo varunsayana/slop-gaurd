@@ -3,8 +3,7 @@ Configuration schemas for SlopGuard.
 """
 
 from pydantic import BaseModel, Field
-from typing import Dict, List, Optional
-from pathlib import Path
+from typing import Dict, List
 import yaml
 import os
 
