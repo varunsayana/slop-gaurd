@@ -30,7 +30,9 @@ class TextFormatter:
                 scolor = (
                     "red"
                     if f.severity == "high"
-                    else "yellow" if f.severity == "medium" else "blue"
+                    else "yellow"
+                    if f.severity == "medium"
+                    else "blue"
                 )
                 loc = f"{f.file_path}:{f.line_number}"
                 table.add_row(
