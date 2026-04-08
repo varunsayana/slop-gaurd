@@ -1,0 +1,52 @@
+name: "SlopGuard Action"
+description: "Detects low-value, production-risky code ('AI slop') in pull requests via Reviewdog."
+author: "SlopGuard Contributors"
+
+inputs:
+  base_ref:
+    description: "The base reference string (e.g. origin/main) to compare against."
+    required: false
+    default: ${{ github.base_ref }}
+  head_ref:
+    description: "The head reference string (e.g. HEAD) to compare against."
+    required: false
+    default: ${{ github.event.pull_request.head.sha }}
+  reporter:
+    description: "Reviewdog reporter (github-pr-review, github-pr-check)."
+    required: false
+    default: "github-pr-review"
+  filter_mode:
+    description: "Reviewdog filter mode (added, diff_context, nofilter)."
+    required: false
+    default: "added"
+  level:
+    description: "Reviewdog level (error, warning, info)."
+    required: false
+    default: "warning"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Install Reviewdog"
+      shell: bash
+      run: |
+        curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b /tmp/bin
+        echo "/tmp/bin" >> $GITHUB_PATH
+
+    - name: "Install SlopGuard"
+      shell: bash
+      run: |
+        pip install "typer>=0.9.0" "pydantic>=2.0.0" "unidiff>=0.7.5" "tree-sitter>=0.21.0" "tree-sitter-javascript>=0.21.0" "tree-sitter-typescript>=0.21.0" "rich>=13.0.0" "PyYAML>=6.0"
+        cd ${{ github.action_path }} || cd $GITHUB_WORKSPACE
+        pip install -e .
+
+    - name: "Run SlopGuard Pipeline"
+      shell: bash
+      env:
+        REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
+      run: |
+        echo "Running SlopGuard with Reviewdog..."
+        slopguard analyze --base origin/${{ inputs.base_ref }} --head ${{ inputs.head_ref }} --output-format reviewdog | reviewdog -f=rdjson -reporter=${{ inputs.reporter }} -filter-mode=${{ inputs.filter_mode }} -level=${{ inputs.level }} -fail-on-error=true
+        
+        echo "Generating PR Summary..."
+        slopguard analyze --base origin/${{ inputs.base_ref }} --head ${{ inputs.head_ref }} --output-format markdown
