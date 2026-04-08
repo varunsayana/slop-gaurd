@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "slopguard"
+name = "slopguard-core"
 version = "0.1.0"
 description = "A PR quality and production-slop detector to stop bad patches before merge."
 readme = "README.md"
