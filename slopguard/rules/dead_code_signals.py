@@ -1,4 +1,4 @@
-from typing import Optional,  List, Any
+from typing import Optional, List, Any
 from slopguard.models import Finding, Severity, Confidence, Category
 from slopguard.rules.base import BaseRule
 from slopguard.parsers.base import BaseParser

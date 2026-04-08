@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional,  List, Any
+from typing import Optional, List, Any
 from slopguard.models import Finding
 from slopguard.parsers.base import BaseParser
 
