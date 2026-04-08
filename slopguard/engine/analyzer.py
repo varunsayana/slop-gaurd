@@ -13,6 +13,7 @@ from slopguard.parsers.generic import GenericParser
 # Import rules registry
 from slopguard.rules import registry
 
+
 class Analyzer:
     def __init__(self, config: SlopGuardConfig, context: RunContext):
         self.config = config
@@ -32,33 +33,43 @@ class Analyzer:
         """Runs the complete analysis pipeline."""
         patch_set = None
         if self.context.base_ref and self.context.head_ref:
-            patch_set = self.diff_loader.get_diff_from_refs(self.context.base_ref, self.context.head_ref)
+            patch_set = self.diff_loader.get_diff_from_refs(
+                self.context.base_ref, self.context.head_ref
+            )
         elif self.context.is_staged_only:
             patch_set = self.diff_loader.get_diff_staged()
         elif self.context.patch_file:
             patch_set = self.diff_loader.load_patch_file(self.context.patch_file)
         elif self.context.single_file:
             patch_set = self.diff_loader.construct_file_diff(self.context.single_file)
-            
+
         all_findings = []
         if not patch_set:
-            return {"score": 100, "status": "Pass", "categories": {}, "counts": {}, "findings": []}
+            return {
+                "score": 100,
+                "status": "Pass",
+                "categories": {},
+                "counts": {},
+                "findings": [],
+            }
 
         # Analyze each changed file
         for patched_file in patch_set:
             if not patched_file.is_added_file and not patched_file.is_modified_file:
                 continue
-            
+
             file_path = patched_file.path
-            
-            # Simple exclude 
-            if any(file_path.endswith(ext) for ext in [".json", ".md", ".txt", ".lock"]):
+
+            # Simple exclude
+            if any(
+                file_path.endswith(ext) for ext in [".json", ".md", ".txt", ".lock"]
+            ):
                 continue
 
             full_path = os.path.join(self.context.repo_path, file_path)
             if not os.path.exists(full_path):
                 continue
-                
+
             with open(full_path, "r", encoding="utf-8", errors="ignore") as f:
                 code = f.read()
 
@@ -73,15 +84,19 @@ class Analyzer:
             ext = os.path.splitext(file_path)[1]
             parser = self.parsers.get(ext, self.generic_parser)
             parsed_ast = parser.parse(code)
-            
+
             # Run enabled rules
             for rule_id, rule_class in registry.items():
                 rule_config = self.config.rules.get(rule_id)
-                if getattr(rule_config, "enabled", True): # active by default if not set
+                if getattr(
+                    rule_config, "enabled", True
+                ):  # active by default if not set
                     opts = getattr(rule_config, "options", {}) if rule_config else {}
                     rule_instance = rule_class(opts)
-                    findings = rule_instance.evaluate(file_path, code, parsed_ast, parser)
-                    
+                    findings = rule_instance.evaluate(
+                        file_path, code, parsed_ast, parser
+                    )
+
                     # Optional severity override from config
                     if rule_config and getattr(rule_config, "severity", None):
                         for fnd in findings:
@@ -94,15 +109,18 @@ class Analyzer:
                             continue
 
                         is_changed = fnd.line_number in changed_lines
-                        
+
                         if fnd.scope == Scope.LINE:
                             if is_changed:
                                 all_findings.append(fnd)
                         elif fnd.scope == Scope.FILE:
                             if fnd.caused_by_pr:
                                 if not is_changed and changed_lines:
-                                    fnd.line_number = min(changed_lines, key=lambda x: abs(x - (fnd.line_number or 1)))
-                                elif not changed_lines: 
+                                    fnd.line_number = min(
+                                        changed_lines,
+                                        key=lambda x: abs(x - (fnd.line_number or 1)),
+                                    )
+                                elif not changed_lines:
                                     fnd.line_number = 1
                                 all_findings.append(fnd)
 

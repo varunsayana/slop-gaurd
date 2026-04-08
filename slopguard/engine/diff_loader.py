@@ -1,16 +1,20 @@
 """
 Diff Loader using Git & Unidiff.
 """
+
 from typing import List, Optional
 import unidiff
 import os
 from slopguard.utils.subprocess import run_git
 
+
 class DiffLoader:
     def __init__(self, repo_path: str):
         self.repo_path = repo_path
 
-    def get_diff_from_refs(self, base_ref: str, head_ref: str) -> Optional[unidiff.PatchSet]:
+    def get_diff_from_refs(
+        self, base_ref: str, head_ref: str
+    ) -> Optional[unidiff.PatchSet]:
         """Gets diff between two git refs."""
         stdout, stderr = run_git(["diff", base_ref, head_ref], cwd=self.repo_path)
         if not stdout:

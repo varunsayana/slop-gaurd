@@ -4,6 +4,7 @@ from slopguard.formatters.markdown_summary import MarkdownSummaryFormatter
 from slopguard.formatters.sarif import SarifFormatter
 from slopguard.formatters.reviewdog import ReviewdogFormatter
 
+
 def get_formatter(format_name: str):
     mapping = {
         "text": TextFormatter(),
@@ -11,6 +12,6 @@ def get_formatter(format_name: str):
         "github": MarkdownSummaryFormatter(),
         "markdown": MarkdownSummaryFormatter(),
         "sarif": SarifFormatter(),
-        "reviewdog": ReviewdogFormatter()
+        "reviewdog": ReviewdogFormatter(),
     }
     return mapping.get(format_name.lower(), TextFormatter())

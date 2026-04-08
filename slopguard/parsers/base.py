@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List
 
+
 class BaseParser(ABC):
     @abstractmethod
     def parse(self, code: str) -> Any:

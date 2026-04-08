@@ -1,6 +1,7 @@
 """
 Configuration schemas for SlopGuard.
 """
+
 from pydantic import BaseModel, Field
 from typing import Dict, List, Optional
 from pathlib import Path
@@ -13,13 +14,26 @@ DEFAULT_CONFIG_PATH = ".slopguard.yml"
 
 
 class ThresholdsConfig(BaseModel):
-    fail_score: int = Field(default=80, description="Score threshold to return non-zero exit code.")
-    warn_score: int = Field(default=50, description="Score threshold to emit warnings explicitly.")
+    fail_score: int = Field(
+        default=80, description="Score threshold to return non-zero exit code."
+    )
+    warn_score: int = Field(
+        default=50, description="Score threshold to emit warnings explicitly."
+    )
 
 
 class PathsConfig(BaseModel):
     include: List[str] = Field(default=["**/*.py", "**/*.js", "**/*.ts"])
-    exclude: List[str] = Field(default=["tests/**", "docs/**", "node_modules/**", "venv/**", ".venv/**", "dist/**"])
+    exclude: List[str] = Field(
+        default=[
+            "tests/**",
+            "docs/**",
+            "node_modules/**",
+            "venv/**",
+            ".venv/**",
+            "dist/**",
+        ]
+    )
 
 
 class BaselineConfig(BaseModel):
@@ -54,7 +68,7 @@ class SlopGuardConfig(BaseModel):
     baseline: BaselineConfig = Field(default_factory=BaselineConfig)
     rules: Dict[str, RuleConfig] = Field(default_factory=dict)
     autofix: AutofixConfig = Field(default_factory=AutofixConfig)
-    
+
     ci: CiConfig = Field(default_factory=CiConfig)
     reviewdog: ReviewdogConfig = Field(default_factory=ReviewdogConfig)
     performance: PerformanceConfig = Field(default_factory=PerformanceConfig)

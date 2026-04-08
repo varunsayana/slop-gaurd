@@ -2,6 +2,7 @@ from typing import List
 from slopguard.models import Finding
 from slopguard.config import SlopGuardConfig
 
+
 class AutofixEngine:
     def __init__(self, config: SlopGuardConfig):
         self.config = config
@@ -18,6 +19,6 @@ class AutofixEngine:
         fixed = []
         for finding in findings:
             if self.can_fix(finding):
-                 # In a full implementation, we would rewrite the code using ast.unparse or libcst
-                 fixed.append(finding)
+                # In a full implementation, we would rewrite the code using ast.unparse or libcst
+                fixed.append(finding)
         return fixed
