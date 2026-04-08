@@ -120,7 +120,7 @@ def config(action: str = typer.Argument("init", help="init to generate config"))
 
 @app.command()
 def autofix(
-    safe: bool = typer.Option(True, "--safe", help="Only apply 100% safe fixes.")
+    safe: bool = typer.Option(True, "--safe", help="Only apply 100% safe fixes."),
 ):
     """
     Apply safe automatic fixes to unambiguous slop findings.
@@ -130,4 +130,3 @@ def autofix(
 
 if __name__ == "__main__":
     app()
-
